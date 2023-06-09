@@ -1,4 +1,4 @@
-name: Push lastest KernelSU
+name: Push Lastest KernelSU
 on:
   workflow_dispatch:
   schedule:
@@ -39,7 +39,7 @@ jobs:
         git checkout main
         git pull
         cd .. && git add .
-        git commit -m "Auto sync KernelSU to latest source"
+        git commit -m "KernelSU: Auto-Sync KernelSU To Latest Source"
         export NEW=$(git rev-parse HEAD)
         echo "NEW_SHA=$NEW" >> $GITHUB_OUTPUT
     - name: Push
@@ -54,8 +54,12 @@ jobs:
       with:
         to: ${{ secrets.TELEGRAM_TO }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
-        message: Build Started
-        
+        message: |
+          **KernelSU Build Started**
+
+          Kernel Version : 4.9.337
+          Kernel Name : Amatera-SU
+
     - name: Install dependencies
       if: "${{ github.sha != steps.sha.outputs.NEW_SHA }}"
       id: version
@@ -65,7 +69,7 @@ jobs:
         sudo apt install gcc-arm-linux-gnueabi -y
         sudo apt install binutils make python3 libssl-dev build-essential bc  bison flex zip unzip libssl-dev ca-certificates xz-utils mkbootimg cpio device-tree-compiler git git-lfs -y
         git clone --depth=1 https://github.com/kdrag0n/proton-clang.git clang
-        git clone https://github.com/H1mJT/AnyKernel3 -b master --depth=1
+        git clone https://github.com/ashim-anwar/AnyKernel3 -b master --depth=1
         rm -rf AnyKernel3/.git
         rm -rf AnyKernel3/.github
         cd $GITHUB_WORKSPACE/KernelSU
@@ -86,7 +90,7 @@ jobs:
        make $KERNEL_CMDLINE $KERNEL_DEFCONFIG CC="ccache clang"
        make $KERNEL_CMDLINE CC="ccache clang" -j$(nproc --all)
        cp out/arch/arm64/boot/Image.gz-dtb AnyKernel3
-       cd AnyKernel3 && zip -r ../RMX1901-KernelSU-${{ steps.version.outputs.VER }}-${{ steps.get_time.outputs.TIME }}.zip *
+       cd AnyKernel3 && zip -r ../RMX1901-AmateraSU-${{ steps.version.outputs.VER }}-${{ steps.get_time.outputs.TIME }}.zip *
 
     - name: Upload build to Telegram
       if: "${{ env.TELEGRAM_TO != '' && env.TELEGRAM_TOKEN != '' && github.sha != steps.sha.outputs.NEW_SHA}}"
@@ -97,12 +101,12 @@ jobs:
         message: |
           Updated KernelSU to ${{ steps.version.outputs.VER }}
           Get latest manager app at https://t.me/KernelSU_group/3234
-        document: RMX1901-KernelSU-${{ steps.version.outputs.VER }}-${{ steps.get_time.outputs.TIME }}.zip
+        document: RMX1901-AmateraSU-${{ steps.version.outputs.VER }}-${{ steps.get_time.outputs.TIME }}.zip
     - name: Upload Kernel
       if: "${{ github.sha != steps.sha.outputs.NEW_SHA }}"
       uses: actions/upload-artifact@v3
       with:
-        name: RMX1901-KernelSU-${{ steps.version.outputs.VER }}-${{ steps.get_time.outputs.TIME }}
+        name: RMX1901-AmateraSU-${{ steps.version.outputs.VER }}-${{ steps.get_time.outputs.TIME }}
         path: "AnyKernel3/*"
         
         
