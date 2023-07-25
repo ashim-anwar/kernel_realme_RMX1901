@@ -57,6 +57,7 @@ jobs:
         message: |
           **KernelSU Build Started**
 
+          Device : realme-X [RMX1901] 
           Kernel Version : 4.9.337
           Kernel Name : Amatera-SU
 
