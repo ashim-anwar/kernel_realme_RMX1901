@@ -2877,7 +2877,7 @@ static void unmap_region(struct mm_struct *mm,
 	struct vm_area_struct *next = prev ? prev->vm_next : mm->mmap;
 #endif
 	struct mmu_gather tlb;
-	struct vm_area_struct *cur_vma;
+	struct vm_area_struct;
 
 #if defined(CONFIG_PRODUCT_REALME_SDM710) && defined(CONFIG_VIRTUAL_RESERVE_MEMORY)
 	if (BACKUP_ALLOC_FLAG(vma->vm_flags)) {
